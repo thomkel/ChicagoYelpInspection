@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Dba name:</strong>
+  <%= @business.dba_name %>
+</p>
+
+<p>
+  <strong>Aka name:</strong>
+  <%= @business.aka_name %>
+</p>
+
+<p>
+  <strong>License:</strong>
+  <%= @business.license %>
+</p>
+
+<p>
+  <strong>Facility type:</strong>
+  <%= @business.facility_type %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @business.address %>
+</p>
+
+<p>
+  <strong>Zip:</strong>
+  <%= @business.zip %>
+</p>
+
+<p>
+  <strong>Latitude:</strong>
+  <%= @business.latitude %>
+</p>
+
+<p>
+  <strong>Longitude:</strong>
+  <%= @business.longitude %>
+</p>
+
+<%= link_to 'Edit', edit_business_path(@business) %> |
+<%= link_to 'Back', businesses_path %>

@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dba_name: MyString
+  aka_name: MyString
+  license: 1
+  facility_type: MyString
+  address: MyString
+  zip: 1
+  latitude: 
+  longitude: 
+
+two:
+  dba_name: MyString
+  aka_name: MyString
+  license: 1
+  facility_type: MyString
+  address: MyString
+  zip: 1
+  latitude: 
+  longitude: 

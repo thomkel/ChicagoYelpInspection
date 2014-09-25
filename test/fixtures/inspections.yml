@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  inspect_id: 1
+  inspect_date: 2014-09-24
+  results: MyString
+  violations: MyText
+
+two:
+  inspect_id: 1
+  inspect_date: 2014-09-24
+  results: MyString
+  violations: MyText
