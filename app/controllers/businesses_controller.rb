@@ -4,9 +4,17 @@ class BusinessesController < ApplicationController
   # GET /businesses
   # GET /businesses.json
   def index
-    @location = params[location]
+    @location = "Kokomo"
+    @businesses = Business.all
+  end
+
+  def search
+    @location = params[:location]
 
     @businesses = Business.all
+
+    parameters = { term: "Hopleaf", limit: 16 }
+    render json: Yelp.client.search(@location, parameters)    
   end
 
   # GET /businesses/1
@@ -71,6 +79,6 @@ class BusinessesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def business_params
-      params.require(:business).permit(:dba_name, :aka_name, :license, :facility_type, :address, :zip, :latitude, :longitude)
+      params.permit(:dba_name, :aka_name, :license, :facility_type, :address, :zip, :latitude, :longitude, :location)
     end
 end
