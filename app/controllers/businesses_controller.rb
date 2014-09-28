@@ -1,3 +1,5 @@
+require 'json'
+
 class BusinessesController < ApplicationController
   before_action :set_business, only: [:show, :edit, :update, :destroy]
 
@@ -5,16 +7,25 @@ class BusinessesController < ApplicationController
   # GET /businesses.json
   def index
     @location = "Kokomo"
+    @results = "none"
     @businesses = Business.all
   end
 
   def search
-    @location = params[:location]
-
     @businesses = Business.all
 
-    parameters = { term: "Hopleaf", limit: 16 }
-    render json: Yelp.client.search(@location, parameters)    
+    @location = params[:location]
+
+    parameters = { term: "food", limit: 10 }
+    response = Yelp.client.search(@location, parameters) 
+    responses = response.businesses 
+    @results = []  
+
+    responses.each do |response|
+      @results.push(response.rating)
+    end
+
+    render 'index'
   end
 
   # GET /businesses/1
