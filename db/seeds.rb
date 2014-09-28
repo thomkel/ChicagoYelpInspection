@@ -7,52 +7,40 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 require 'json'
+require 'open-uri'
 
 Business.destroy_all
 Inspection.destroy_all
 
-json = File.read('db/inspections.json')
-json_data = JSON.parse(json)
-inspections = json_data["data"]
+url = "http://data.cityofchicago.org/resource/4ijn-s7e5.json"
+json = open(url).read
+inspections = JSON.parse(json)
 
 inspections.each do |inspection|
-	inspect_id = inspection[8]
-	dba_name = inspection[9]
-	aka_name = inspection[10]
-	license = inspection[11]
-	facility_type = inspection[12]
-	address = inspection[14]
-	zip = inspection[17]
-	inspect_date = inspection[18]
-	inspect_type = inspection[19]
-	results = inspection[20]
-	violations = inspection[21]
-	latitude = inspection[22]
-	longitude = inspection[23]
 
-	business = Business.find_by("address = ? AND aka_name = ?", address, aka_name)
+	business = Business.find_by("address = ? AND dba_name = ?", inspection["address"], inspection["dba_name"])
 
 	if business.nil?
 		business = Business.new
-		business.dba_name = dba_name
-		business.aka_name = aka_name
-		business.license = license.to_i
-		business.facility_type = facility_type
-		business.address = address
-		business.zip = zip.to_i
-		business.latitude = latitude.to_f
-		business.longitude = longitude.to_f
+		business.dba_name = inspection["dba_name"]
+		business.aka_name = inspection["aka_name"]
+		business.license = inspection["license_"].to_i
+		business.facility_type = inspection["facility_type"]
+		business.address = inspection["address"]
+		business.zip = inspection["zip"].to_i
+		business.latitude = inspection["latitude"].to_f
+		business.longitude = inspection["longitude"].to_f
 		business.save
 
 		puts "New Business: " + business.dba_name + " " + business.address
 	end
 
 	new_inspection = Inspection.new
-	new_inspection.inspect_id = inspect_id.to_i
-	new_inspection.inspect_date = inspect_date
-	new_inspection.inspect_type = inspect_type
-	new_inspection.results = results
-	new_inspection.violations = violations
+	new_inspection.inspect_id = inspection["inspection_id"].to_i
+	new_inspection.inspect_date = inspection["inspection_date"]
+	new_inspection.inspect_type = inspection["inspection_type"]
+	new_inspection.results = inspection["results"]
+	new_inspection.violations = inspection["violations"]
 	new_inspection.business_id = business.id
 	new_inspection.save
 
