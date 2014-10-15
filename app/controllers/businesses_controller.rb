@@ -1,4 +1,5 @@
 require 'json'
+require 'yelp'
 
 class BusinessesController < ApplicationController
   before_action :set_business, only: [:show, :edit, :update, :destroy]
@@ -6,26 +7,54 @@ class BusinessesController < ApplicationController
   # GET /businesses
   # GET /businesses.json
   def index
-    @location = "Kokomo"
-    @results = "none"
     @businesses = Business.all
   end
 
   def search
-    @businesses = Business.all
+  end
 
+  def results
     @location = params[:location]
 
     parameters = { term: "food", limit: 10 }
     response = Yelp.client.search(@location, parameters) 
-    responses = response.businesses 
+    @responses = response.businesses 
     @results = []  
 
-    responses.each do |response|
-      @results.push(response.rating)
+    @responses.each do |yelp_business|
+      business_id = URI.escape(yelp_business.id)
+      business = Yelp.client.business(business_id)
+      inspection_id = search_inspections(business)
+      business_info = [business.name, business.rating, inspection_id]
+      @results.push(business_info)
+    end
+  end  
+
+  def search_inspections(business) 
+    address = business.location.address[0].to_s.upcase
+    business_found = Address.find_by("address LIKE ?", "%#{address}%")
+
+    if business_found.nil?
+      return [["no inspections found"]]
     end
 
-    render 'index'
+    inspections = Inspection.where(:business_id => business_found.business_id)
+    @inspect_results = []
+
+    inspections.each do |inspection|
+      if (inspection.results.include?("Pass") || inspection.results.include?("Fail"))
+        inspection_data = [inspection.results, inspection.violations]
+        @inspect_results.push(inspection_data)
+      end
+    end
+
+    return @inspect_results
+
+  end
+
+  def parse_address(address) 
+    # get yer work on
+    return address
   end
 
   # GET /businesses/1

@@ -1,0 +1,11 @@
+<%= form_tag "/businesses/results", :method => 'post' do %>
+
+  <div class="field">
+    <%= label_tag :location %><br>
+    <%= text_field_tag :location %>
+  </div>
+  <div class="actions">
+    <%= submit_tag :submit %>
+  </div>
+
+<% end %>

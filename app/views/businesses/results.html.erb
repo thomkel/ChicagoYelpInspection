@@ -1,0 +1,6 @@
+<% @results.each do |result| %>
+	<h1><%= result[0].to_s + " " + result[1].to_s %></h1><br>
+	<% result[2].each do |inspection| %>
+		<%= inspection[0] %><br>
+	<% end %><br><br>
+<% end %>

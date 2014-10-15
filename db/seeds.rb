@@ -11,38 +11,44 @@ require 'open-uri'
 
 Business.destroy_all
 Inspection.destroy_all
+Address.destroy_all
 
-url = "http://data.cityofchicago.org/resource/4ijn-s7e5.json"
+url = "https://data.cityofchicago.org/api/views/4ijn-s7e5/rows.json"
 json = open(url).read
-inspections = JSON.parse(json)
+json_data = JSON.parse(json)
+inspections = json_data["data"]
 
 inspections.each do |inspection|
 
-	business = Business.find_by("address = ? AND dba_name = ?", inspection["address"], inspection["dba_name"])
+	business = Business.find_by(:dba_name => inspection[9])
 
 	if business.nil?
 		business = Business.new
-		business.dba_name = inspection["dba_name"]
-		business.aka_name = inspection["aka_name"]
-		business.license = inspection["license_"].to_i
-		business.facility_type = inspection["facility_type"]
-		business.address = inspection["address"]
-		business.zip = inspection["zip"].to_i
-		business.latitude = inspection["latitude"].to_f
-		business.longitude = inspection["longitude"].to_f
+		business.dba_name = inspection[9]
+		business.aka_name = inspection[10]
+		business.license = inspection[11].to_i
+		business.facility_type = inspection[12]
 		business.save
 
-		puts "New Business: " + business.dba_name + " " + business.address
+		address = Address.new
+		address.business_id = business.id
+		address.address = inspection[14]
+		address.zip = inspection[17].to_i
+		address.latitude = inspection[22].to_f
+		address.longitude = inspection[23].to_f
+		address.save		
+
+		puts "New Business: " + business.dba_name + " " + address.address
 	end
 
 	new_inspection = Inspection.new
-	new_inspection.inspect_id = inspection["inspection_id"].to_i
-	new_inspection.inspect_date = inspection["inspection_date"]
-	new_inspection.inspect_type = inspection["inspection_type"]
-	new_inspection.results = inspection["results"]
-	new_inspection.violations = inspection["violations"]
+	new_inspection.inspect_id = inspection[8].to_i
+	new_inspection.inspect_date = inspection[18]
+	new_inspection.inspect_type = inspection[19]
+	new_inspection.results = inspection[20]
+	new_inspection.violations = inspection[21]
 	new_inspection.business_id = business.id
 	new_inspection.save
 
-	puts "New Inspection: " + new_inspection.inspect_id.to_s
+	puts "New Inspection: " + new_inspection.inspect_id.to_s	
 end

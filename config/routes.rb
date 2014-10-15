@@ -1,11 +1,12 @@
 ChicagoYelpInspection::Application.routes.draw do
-  root "businesses#index"
+  root "businesses#search"
 
   resources :inspections
 
   resources :businesses
 
-  post "/businesses/search" => "businesses#search"
+  get "/businesses/search" => "businesses#search"
+  post "/businesses/results" => "businesses#results"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

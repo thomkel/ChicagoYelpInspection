@@ -1,21 +1,4 @@
 <h1>Listing businesses</h1>
-<%= form_tag "/businesses/search", :method => 'post' do %>
-
-  <div class="field">
-    <%= label_tag :location %><br>
-    <%= text_field_tag :location %>
-  </div>
-  <div class="actions">
-    <%= submit_tag :submit %>
-  </div>
-
-<% end %>
-
-<%= @location %>
-
-<%= @results.each do |result| %>
-  <%= result %>
-<% end %>
 
 <table>
   <thead>

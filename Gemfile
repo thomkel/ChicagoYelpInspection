@@ -7,7 +7,7 @@ gem 'rails', '4.0.2'
 gem 'pg'
 
 # Use Yelp for reviews
-gem 'yelp'
+gem 'yelp', '~> 2.0.3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
