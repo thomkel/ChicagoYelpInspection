@@ -4,8 +4,8 @@ require 'yelp'
 class BusinessesController < ApplicationController
   before_action :set_business, only: [:show]
 
-  GET /businesses
-  GET /businesses.json
+  # GET /businesses
+  # GET /businesses.json
   
   def index
     @businesses = Business.all
