@@ -1,24 +1,12 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Inspect:</strong>
-  <%= @inspection.inspect_id %>
-</p>
+<h3><strong><%= Business.find_by(:id => @inspection.business_id).dba_name %></strong></h3>
+
+<h5?><%= @inspection.inspect_date.to_s + ": " + @inspection.results %></h5><br><br>
 
 <p>
-  <strong>Inspect date:</strong>
-  <%= @inspection.inspect_date %>
+  <strong>Violations</strong><br>
+  <% @violations.each do |violation| %>
+  	<%= violation %><br><br>
+  <% end %>
 </p>
-
-<p>
-  <strong>Results:</strong>
-  <%= @inspection.results %>
-</p>
-
-<p>
-  <strong>Violations:</strong>
-  <%= @inspection.violations %>
-</p>
-
-<%= link_to 'Edit', edit_inspection_path(@inspection) %> |
-<%= link_to 'Back', inspections_path %>

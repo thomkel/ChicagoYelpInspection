@@ -2,10 +2,10 @@ require 'json'
 require 'yelp'
 
 class BusinessesController < ApplicationController
-  before_action :set_business, only: [:show, :edit, :update, :destroy]
+  before_action :set_business, only: [:show]
 
-  # GET /businesses
-  # GET /businesses.json
+  GET /businesses
+  GET /businesses.json
   def index
     @businesses = Business.all
   end
@@ -24,8 +24,8 @@ class BusinessesController < ApplicationController
     @responses.each do |yelp_business|
       business_id = URI.escape(yelp_business.id)
       business = Yelp.client.business(business_id)
-      inspection_id = search_inspections(business)
-      business_info = [business.name, business.rating, inspection_id]
+      inspection_info = search_inspections(business)
+      business_info = [business.name, business.rating_img_url, inspection_info, business.url]
       @results.push(business_info)
     end
   end  
@@ -35,26 +35,21 @@ class BusinessesController < ApplicationController
     business_found = Address.find_by("address LIKE ?", "%#{address}%")
 
     if business_found.nil?
-      return [["no inspections found"]]
+      return [["", "no inspections found"]]
     end
 
-    inspections = Inspection.where(:business_id => business_found.business_id)
+    inspections = Inspection.where(:business_id => business_found.business_id).order(inspect_date: :desc)
     @inspect_results = []
 
     inspections.each do |inspection|
       if (inspection.results.include?("Pass") || inspection.results.include?("Fail"))
-        inspection_data = [inspection.results, inspection.violations]
+        inspection_data = [inspection.inspect_date, inspection.results, inspection.violations, inspection.id]
         @inspect_results.push(inspection_data)
       end
     end
 
     return @inspect_results
 
-  end
-
-  def parse_address(address) 
-    # get yer work on
-    return address
   end
 
   # GET /businesses/1
@@ -112,7 +107,7 @@ class BusinessesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    Use callbacks to share common setup or constraints between actions.
     def set_business
       @business = Business.find(params[:id])
     end

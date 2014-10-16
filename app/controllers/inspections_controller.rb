@@ -1,5 +1,5 @@
 class InspectionsController < ApplicationController
-  before_action :set_inspection, only: [:show, :edit, :update, :destroy]
+  before_action :set_inspection, only: [:show]
 
   # GET /inspections
   # GET /inspections.json
@@ -10,6 +10,13 @@ class InspectionsController < ApplicationController
   # GET /inspections/1
   # GET /inspections/1.json
   def show
+    violations = @inspection.violations
+
+    if violations.nil?
+      @violations = [["No inspection details on record"]]
+    else
+      @violations = violations.split("|")
+    end
   end
 
   # GET /inspections/new
