@@ -6,7 +6,7 @@ class BusinessesController < ApplicationController
 
   # GET /businesses
   # GET /businesses.json
-  
+
   def index
     @businesses = Business.all
   end
@@ -108,7 +108,7 @@ class BusinessesController < ApplicationController
   end
 
   private
-    Use callbacks to share common setup or constraints between actions.
+    #Use callbacks to share common setup or constraints between actions.
     def set_business
       @business = Business.find(params[:id])
     end
