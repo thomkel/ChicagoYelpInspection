@@ -6,6 +6,7 @@ class BusinessesController < ApplicationController
 
   GET /businesses
   GET /businesses.json
+  
   def index
     @businesses = Business.all
   end
@@ -13,44 +14,44 @@ class BusinessesController < ApplicationController
   def search
   end
 
-  def results
-    @location = params[:location]
+  # def results
+  #   @location = params[:location]
 
-    parameters = { term: "food", limit: 10 }
-    response = Yelp.client.search(@location, parameters) 
-    @responses = response.businesses 
-    @results = []  
+  #   parameters = { term: "food", limit: 10 }
+  #   response = Yelp.client.search(@location, parameters) 
+  #   @responses = response.businesses 
+  #   @results = []  
 
-    @responses.each do |yelp_business|
-      business_id = URI.escape(yelp_business.id)
-      business = Yelp.client.business(business_id)
-      inspection_info = search_inspections(business)
-      business_info = [business.name, business.rating_img_url, inspection_info, business.url]
-      @results.push(business_info)
-    end
-  end  
+  #   @responses.each do |yelp_business|
+  #     business_id = URI.escape(yelp_business.id)
+  #     business = Yelp.client.business(business_id)
+  #     inspection_info = search_inspections(business)
+  #     business_info = [business.name, business.rating_img_url, inspection_info, business.url]
+  #     @results.push(business_info)
+  #   end
+  # end  
 
-  def search_inspections(business) 
-    address = business.location.address[0].to_s.upcase
-    business_found = Address.find_by("address LIKE ?", "%#{address}%")
+  # def search_inspections(business) 
+  #   address = business.location.address[0].to_s.upcase
+  #   business_found = Address.find_by("address LIKE ?", "%#{address}%")
 
-    if business_found.nil?
-      return [["", "no inspections found"]]
-    end
+  #   if business_found.nil?
+  #     return [["", "no inspections found"]]
+  #   end
 
-    inspections = Inspection.where(:business_id => business_found.business_id).order(inspect_date: :desc)
-    @inspect_results = []
+  #   inspections = Inspection.where(:business_id => business_found.business_id).order(inspect_date: :desc)
+  #   @inspect_results = []
 
-    inspections.each do |inspection|
-      if (inspection.results.include?("Pass") || inspection.results.include?("Fail"))
-        inspection_data = [inspection.inspect_date, inspection.results, inspection.violations, inspection.id]
-        @inspect_results.push(inspection_data)
-      end
-    end
+  #   inspections.each do |inspection|
+  #     if (inspection.results.include?("Pass") || inspection.results.include?("Fail"))
+  #       inspection_data = [inspection.inspect_date, inspection.results, inspection.violations, inspection.id]
+  #       @inspect_results.push(inspection_data)
+  #     end
+  #   end
 
-    return @inspect_results
+  #   return @inspect_results
 
-  end
+  # end
 
   # GET /businesses/1
   # GET /businesses/1.json
