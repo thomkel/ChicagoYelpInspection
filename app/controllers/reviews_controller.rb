@@ -4,7 +4,7 @@ require 'yelp'
 class ReviewsController < ApplicationController
 
   def results
-    location = params[:location]
+    location = validate_location(params[:location].upcase)
     parameters = { category_filter: "restaurants", radius_filter: 3200, limit: 10 }
     response, error = validate_response(location, parameters)
 
@@ -25,6 +25,14 @@ class ReviewsController < ApplicationController
       redirect_to root_url, notice: "#{error}"
     end
   end  
+
+  def validate_location(location)
+    if location.include?("CHICAGO")
+      return location
+    else
+      return location + ", CHICAGO, IL"
+    end
+  end
 
   def validate_response(location, parameters)
     begin
