@@ -123,7 +123,9 @@ class ReviewsController < ApplicationController
     year = date.year
 
     return month[0..2] + " " + year.to_s 
+  end
 
+  def howto
   end
 
   private

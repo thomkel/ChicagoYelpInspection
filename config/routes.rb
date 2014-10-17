@@ -7,6 +7,7 @@ ChicagoYelpInspection::Application.routes.draw do
   get "/reviews/search" => "reviews#search"
   get "/reviews/results" => "reviews#search"
   post "/reviews/results" => "reviews#results"
+  get "/reviews/howto" => "reviews#howto"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

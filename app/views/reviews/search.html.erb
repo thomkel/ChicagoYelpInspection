@@ -1,8 +1,6 @@
-<h3>You can search ChicagoYelpInspection to easily find Yelp ratings AND health inspection history of restaurants near you<h3>
+<h3><strong>Find Yelp ratings AND Chicago health inspection data-- in one place!</strong></h3><br>
 
 <h4>Simply enter a Chicago location as you would in Yelp and you are on your way to good (and safe) eating!</h4>
-
-
 
 <%= form_tag "/reviews/results", :method => 'post' do %>
 
@@ -11,7 +9,9 @@
     <%= text_field_tag :location %>
   </div>
   <div class="actions">
-    <%= submit_tag :submit %>
+    <%= submit_tag :submit %><br><br>
   </div>
 
 <% end %>
+
+

@@ -1,5 +1,6 @@
 class Address < ActiveRecord::Base
 
+	validates :business_id, :presence => true
 	before_save :validate_address
 
 	belongs_to :business
