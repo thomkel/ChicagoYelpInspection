@@ -4,13 +4,14 @@ require 'yelp'
 class ReviewsController < ApplicationController
 
   def results
-    @location = params[:location]
-
+    location = params[:location]
     parameters = { term: "food", limit: 10 }
-    response = Yelp.client.search(@location, parameters) 
-    @responses = response.businesses     
+    response, error = validate_response(location, parameters)
 
-    if !@responses.empty?
+    if error.nil?
+
+      @responses = response.businesses     
+
       @results = []  
 
       @responses.each do |yelp_business|
@@ -21,9 +22,43 @@ class ReviewsController < ApplicationController
         @results.push(business_info)
       end
     else
-      redirect_to root_url, notice: "Not a valid location"
+      redirect_to root_url, notice: "#{error}"
     end
   end  
+
+  def validate_response(location, parameters)
+    begin
+      @error = nil
+      response = Yelp.client.search(location, parameters) 
+    rescue Yelp::Error::UnavailableForLocation
+      @error = "Not a valid location"
+    rescue Yelp::Error::InvalidParameter
+      @error = "Not a valid location"
+    rescue Yelp::Error::MissingParameter
+      @error = "Not a valid location"
+    rescue Yelp::Error::InvalidSignature
+      @error = "oauth signature is invalid"
+    rescue Yelp::Error::InvalidCredentials
+      @error = "Yelp username/password not valid"
+    rescue Yelp::Error::InvalidOauthCredentials
+      @error = "OAuth credentials are not valid"
+    rescue Yelp::Error::InvalidOauthUser
+      @error = "Oauth user is not valid"
+    rescue Yelp::Error::AccountUnconfirmed
+      @error = "Yelp account not yet activated"
+    rescue Yelp::Error::PasswordTooLong
+      @error = "Password too long"
+    rescue Yelp::Error::AreaTooLarge
+      @error = "Geographical area is too large. Max search area is 2500 sq. miles... way bigger than Chicago!"                                                
+    rescue Yelp::Error::MultipleLocations
+      @error = "Multiple locations match query"
+    rescue Yelp::Error::BusinessUnavailable
+      @error = "Business information is unavailable at this time"                
+    end
+
+    return response, @error
+
+  end
 
   def search_inspections(business) 
     address = business.location.address[0].to_s.upcase
