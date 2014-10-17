@@ -1,5 +1,6 @@
 <% @results.each do |result| %>
 	<h3><%= link_to(result[0].to_s, result[3], :target => "_blank") %><br>
+		<%= image_tag "http://s3-media1.fl.yelpcdn.com/assets/2/www/img/55e2efe681ed/developers/yelp_logo_50x25.png" %>
 		<%= image_tag result[1] %></h3>
 	<% result[2].each do |inspection| %>
 		<%= inspection[0] + "---" %>
