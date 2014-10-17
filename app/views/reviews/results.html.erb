@@ -2,7 +2,7 @@
 	<h3><%= link_to(result[0].to_s, result[3], :target => "_blank") %><br>
 		<%= image_tag result[1] %></h3>
 	<% result[2].each do |inspection| %>
-		<%= inspection[0].to_s + ": " %>
+		<%= inspection[0] + "---" %>
 		<% if (inspection[1].include?("Fail") || inspection[1].include?("Condition") ) %>
 			<%= link_to(inspection[1], "/inspections/#{inspection[3]}") %>
 		<% else %>

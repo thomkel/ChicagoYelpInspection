@@ -8,23 +8,34 @@ class ReviewsController < ApplicationController
 
     parameters = { term: "food", limit: 10 }
     response = Yelp.client.search(@location, parameters) 
-    @responses = response.businesses 
-    @results = []  
+    @responses = response.businesses     
 
-    @responses.each do |yelp_business|
-      business_id = URI.escape(yelp_business.id)
-      business = Yelp.client.business(business_id)
-      inspection_info = search_inspections(business)
-      business_info = [business.name, business.rating_img_url, inspection_info, business.url]
-      @results.push(business_info)
+    if !@responses.empty?
+      @results = []  
+
+      @responses.each do |yelp_business|
+        business_id = URI.escape(yelp_business.id)
+        business = Yelp.client.business(business_id)
+        inspection_info = search_inspections(business)
+        business_info = [business.name, business.rating_img_url, inspection_info, business.url]
+        @results.push(business_info)
+      end
+    else
+      redirect_to root_url, notice: "Not a valid location"
     end
   end  
 
   def search_inspections(business) 
     address = business.location.address[0].to_s.upcase
+    city = business.location.city.to_s.upcase  
+
+    if !city.include?("CHICAGO")
+      return [["", "not located in Chicago"]]
+    end 
+
     business_found = search_businesses(Address.where("address LIKE ?", "%#{address}%"), business.name.upcase)
 
-    if business_found.nil?
+    if business_found.nil? 
       return [["", "no inspections found"]]
     end
 
@@ -33,7 +44,8 @@ class ReviewsController < ApplicationController
 
     inspections.each do |inspection|
       if (inspection.results.include?("Pass") || inspection.results.include?("Fail"))
-        inspection_data = [inspection.inspect_date, inspection.results, inspection.violations, inspection.id]
+        inspect_date = format_date(inspection.inspect_date)
+        inspection_data = [inspect_date, inspection.results, inspection.violations, inspection.id]
         @inspect_results.push(inspection_data)
       end
     end
@@ -68,6 +80,14 @@ class ReviewsController < ApplicationController
 
       return nil
     end
+
+  end
+
+  def format_date(date)
+    month = Date::MONTHNAMES[date.mon]
+    year = date.year
+
+    return month[0..2] + " " + year.to_s 
 
   end
 
