@@ -5,7 +5,7 @@ class ReviewsController < ApplicationController
 
   def results
     location = params[:location]
-    parameters = { term: "restaurant", limit: 10 }
+    parameters = { category_filter: "restaurants", radius_filter: 3200, limit: 10 }
     response, error = validate_response(location, parameters)
 
     if error.nil?
