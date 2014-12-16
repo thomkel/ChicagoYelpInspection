@@ -1,28 +1,12 @@
-== README
+<h3>Description</h3>
+ChicagoYelpInspection allows a user to search Yelp for the best 10 restaurants near a location. The results are presented along with the Chicago Health Inspection data for that restaurant.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+<h3>How It Works</h3>
+ChicagoYelpInspection makes use of the Yelp API to find restaurants in Chicago. This data is cross referenced with Chicago Health Inspection Data stored in a relational database and then presented to the user. The results include hyperlinks to the Yelp pages for each restaurant and shows the health inspection history for each restaurant if available. For failed and passed w/ conditions results, a link to the inspection data is provided so users can see the specific violations. 
 
-Things you may want to cover:
+<h3>Link</h3>
+http://chicagoyelpinspection.herokuapp.com/
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+<h3>Future Improvements</h3>
+The search functionality needs to be more accurate/reliable. 
+Plan to get automatic updates when weekly health inspection data is posted.
